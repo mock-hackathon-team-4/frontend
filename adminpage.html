@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Work Sans', sans-serif;
+    }
+
+    /* Float four columns side by side */
+    .column {
+      float: left;
+      width: 100%;
+      margin:10px;
+    }
+
+    /* Remove extra left and right margins, due to padding */
+    .row {margin: 0 10px;}
+
+    /* Clear floats after the columns */
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    /* Responsive columns */
+    @media screen and (max-width: 600px) {
+      .column {
+        width: 100%;
+        display: block;
+        margin-bottom: 20px;
+      }
+    }
+
+    /* Style the counter cards */
+    .card {
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      padding: 16px;
+      text-align: left;
+      background-color: #f1f1f1;
+    }
+    
+    
+    .container{
+      margin-top: 50px;
+    }
+    .header{
+      padding:30px;
+      background-color: teal;
+      color: white;
+      border-radius: 20px;
+      margin-bottom: 15px;
+      font-family: 'Work Sans', sans-serif;
+      
+      text-align: center;
+      
+
+    }
+    .btn{
+      margin: 5px;
+      width: 100px;
+      display: inline;
+    }
+    .new-event-button
+    {
+      float: right;
+      display:inline-block;
+      padding: 15px;
+     
+      border: none;
+      width: 120px;
+    }
+    .btn-danger{
+      display:inline-block;
+    }
+   
+    </style>
+    
+    </head>
+<body>
+  <div class="container">
+  <div class="header">
+  <h2 style="font-size: 40px;">NGO Admin Page</h2>
+  </div>
+  <h3 style="margin-left: 20px; display: inline-block;"><b>Existing events</b></h3>
+
+  <div class="modal" id="createevent" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create Event</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+              <form>
+                  
+                     <div class="form-group">
+                     <label for="inputeventname">Event Name</label>
+                     <input type="text" class="form-control" id="inputeventname" aria-describedby="emailHelp" placeholder="Event name" required="true" >
+                     </div>
+
+                     <div class="form-group">
+                      <label for="inputeventlocation">Event Location</label>
+                      <input type="text" class="form-control" id="inputeventlocation" aria-describedby="emailHelp" placeholder="Event Location" required="true">
+                      </div>
+                     <div class="form-group">
+                        <label for="inputeventstartdate">Start Date</label>
+                        <input id="startdatepicker" width="276" required="true" />
+                      </div>
+                      <div class="form-group">
+                        <label for="inputeventenddate">End Date</label>
+                        <input id="enddatepicker" width="276" required="true" />
+                      </div>
+                      <div class="form-group">
+                        <label for="inputeventcontact">Contact Number</label>
+                        <input type="text" class="form-control" id="inputeventcontact" aria-describedby="emailHelp" placeholder="Ph" required="true">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputeventdesc">Description:</label>
+                        <textarea class="form-control" rows="5" id="inputeventdesc"></textarea>
+                      </div>
+                    </form>
+               
+           
+
+        </div>
+        <div class="modal-footer">
+            
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button id="create-event-button"type="button" class="btn btn-primary">Create</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button style="margin-left: 20px;" type="button" class="btn btn-success new-event-button" data-toggle='modal' data-target='#createevent'>New Event</button>
+  <br><br> 
+<div class="row">
+  <div class="column">
+    <div class="card">
+      <h3>Event 1</h3>
+      <p>Some text</p>
+      <p>Some text</p>
+      <button type='button' class='btn btn-primary edit-event'>Edit</button>
+      <button type='button' class='btn btn-danger delete-event'>Delete</button>
+
+    </div>
+  </div>
+  
+
+  <div class="column">
+    <div class="card">
+      <h3>Event 2</h3>
+      <p>Some text</p>
+      <p>Some text</p>
+      
+      <button type='button' class='btn btn-primary edit-event'>Edit</button>
+      <button type='button' class='btn btn-danger delete-event'>Delete</button>
+
+    </div>
+  </div>
+  
+  <div class="column">
+    <div class="card">
+      <h3>Event 3</h3>
+      <p id="qwerty">Some text</p>
+      <p>Some text</p>
+      <button type='button' class='btn btn-primary edit-event'>Edit</button>
+
+      <button type='button' class='btn btn-danger delete-event'>Delete</button>
+
+    </div>
+  </div>
+  
+ 
+</div>
+</div>
+<script>
+  $('#enddatepicker').datepicker({
+      uiLibrary: 'bootstrap4'
+  });
+  $('#startdatepicker').datepicker({
+      uiLibrary: 'bootstrap4'
+  });
+</script>
+</body>
+</html>
