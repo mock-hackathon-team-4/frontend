@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Volunter</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+        <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+
+        <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase.js"></script>
+        <script>
+            var firebaseConfig = {
+                apiKey: "AIzaSyBrePrVL7CuPjjnbe8xNGmeg0I8UHP1izs",
+                authDomain: "first-web-e0fb1.firebaseapp.com",
+                databaseURL: "https://first-web-e0fb1.firebaseio.com",
+                projectId: "first-web-e0fb1",
+                storageBucket: "first-web-e0fb1.appspot.com",
+                messagingSenderId: "879234316989",
+                appId: "1:879234316989:web:f1e6215e2c8c7cbd4115d4"
+            };
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+        </script>
+        <style>
+            .container{
+                margin-top: 50px;
+                
+                margin-bottom: 50px;
+            }
+            .header{
+                padding: 30px;
+                background-color: cadetblue;
+                text-align: center;
+                border-radius: 10px;
+                color: white;
+            }
+           
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>Volunteer </h1>
+                
+            </div>
+            <hr>
+            <button style='font-size:24px;float: right;border-radius: 50%;border-color: black;'><i class='fas fa-user'></i></button>
+                <br><p style="float: right;" id="usericon"></p>
+                <br>
+                <div class="container" id="logout">
+                    <button id="logout-button" style="width :100px;float:right;" type="button" class="btn btn-danger btn-block">Log Out</button>
+                    
+                </div>
+        </div>
+           
+            <div class="container" id="login-form">
+                
+                <h1 id="create">Log In Or Create Account</h1>
+                
+                
+                <div class="jumbotron">
+                    
+                    <form>
+                        <div class="form-group">
+                        <label for="inputemail">Email </label>
+                        <input type="email" class="form-control" id="inputemail" aria-describedby="emailHelp" placeholder="Enter email">
+                        
+                        </div>
+                        <div class="form-group">
+                        <label for="inputpasswd">Password</label>
+                        <input type="password" class="form-control" id="inputpasswd" placeholder="Password">
+                        </div>
+                        
+                        <button id="sign-in-button" type="button" class="btn btn-primary btn-block">Sign In</button>
+                        <button id="create-user-button" type="button" class="btn btn-warning btn-block">Create Account</button>
+                        <button id="google-login-button" type="button" class="btn btn-primary btn-block">Sign In with Google</button>
+                        
+    
+                    </form>
+                    
+                        
+                </div>
+               
+                
+            </div>
+            
+
+        <div class="container" id="show-hero">
+            <h1>Show Events</h1>
+        </div>
+        <script>
+             var currentuser={};
+            $('#create-user-button').click(function(){
+                var email=$("#inputemail").val();
+                var password=$("#inputpasswd").val();
+                console.log("user= " +email+ " "+ password);
+                CreateUser(email,password);
+            });
+            $('#sign-in-button').click(function(){
+                var email=$("#inputemail").val();
+                var password=$("#inputpasswd").val();
+                console.log("existinguser= " +email+ " "+ password);
+                SignIn(email,password);
+                $("#usericon").text(email);
+                $("#login-form").hide();
+               
+                $("#logout").show();
+            });
+            $('#logout-button').click(function(){
+                firebase.auth().signOut();
+                console.log("loged out");
+                $("#usericon").text(" ");
+                $("#login-form").show();
+                $("#show-hero").hide();
+                $("#logout").hide();
+                    
+              
+            });
+            function CreateUser(email,password)
+            {
+
+                
+                firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+                    // Handle Errors here.
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    // ...
+                    });
+            }
+            function writeUserData(user) {
+                firebase.database().ref('volunteers/' + user.uid).set({
+                    
+                    email: user.email
+                    
+                });
+            }
+            function SignIn(email,password){
+            firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+                                // Handle Errors here.
+                                var errorCode = error.code;
+                                var errorMessage = error.message;
+                                // ...
+                    });
+            }
+           $("#google-login-button").click(function(){
+                var provider = new firebase.auth.GoogleAuthProvider();
+                firebase.auth().signInWithPopup(provider).then(function(result) {
+                // This gives you a Google Access Token. You can use it to access the Google API.
+                var token = result.credential.accessToken;
+                // The signed-in user info.
+                 currentuser = result.user;
+                 $("#usericon").text(currentuser);
+                // ...
+                }).catch(function(error) {
+                // Handle Errors here.
+               
+                var errorMessage = error.message;
+                alert(errorMessage);
+                // The email of the user's account used.
+                var email = error.email;
+                // The firebase.auth.AuthCredential type that was used.
+                var credential = error.credential;
+                // ...
+                });
+
+        });
+        firebase.auth().onAuthStateChanged(function(user) {
+                if (user) {
+                    // User is signed in.
+                   
+                    var email = user.email;
+                    currentuser=user;
+                    writeUserData(user);
+                     
+                    $("#login-form").hide();
+                    $("#add-hero").show();
+                    
+                } 
+                else {
+                    // User is signed out.
+                    // ...
+                }
+            });
+            var heroref=firebase.database().ref().child("heroes");
+            heroref.on("value",function(snapshot){
+                $("#show-hero").empty();
+                var heroHtml="<h3>Events</h3>";
+                snapshot.forEach(function(childsnapshot){
+                    var person=childsnapshot.val();
+                    heroHtml+="<div class 'heroHtml'<hr><ul>";
+                    heroHtml+="<li>Name:<span class='hero-data-name'>"+ person.name+"</span> </li>";
+                    heroHtml+="<li>Race:<span class='hero-data-race'>"+ person.race+"</span> </li>";
+                    heroHtml+="<li>Profession:<span class='hero-data-profession'>"+ person.profession+"</span> </li>";
+                    heroHtml+="<li>Strength:<span class='hero-data-strength'>"+ person.strength+"</span> </li>";
+                    heroHtml+="<li>Stamina:<span class='hero-data-stamina'>"+ person.stamina+"</span> </li>";
+                    heroHtml+="<li>Is diety:<span class='hero-data-diety'>"+ person.diety+"</span> </li>";
+                    heroHtml+="</ul>";
+                    heroHtml+=" <button type='button' class='btn btn-primary Apply-hero' id="+ person.name+">Apply</button>";
+                   
+                    heroHtml+="</div>";
+                });
+                $("#show-hero").html(heroHtml);
+            });
+            $(document).on("click",".Apply-hero",function(){
+                var eventid=$(this).attr('id');
+                var event={
+                    eventname: eventid,
+                    volunteername: currentuser,
+                }
+                console.log(eventid);
+                console.log(currentuser.email);
+                addherodata(event)
+                
+            });
+            function addherodata(h)
+            {
+                var database=firebase.database();
+               
+               
+               
+                firebase.database().ref("events/" +h.eventname).push(currentuser.email);
+
+
+                    
+                    
+                    
+                
+            }
+        </script>
+    </body>
+</html>
